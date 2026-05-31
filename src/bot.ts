@@ -32,7 +32,8 @@ bot.onText(/\/start/, (msg) => {
 
   bot.sendMessage(
     chatId,
-    "👋 Welcome!\n\nI'm your Node.js Telegram bot.\nSend me a message and I’ll reply.",
+    "👋 Welcome!\n\nI'm your Node.js Telegram bot.\nSend me a message and I’ll reply." +
+      chatId,
   );
 });
 
@@ -46,7 +47,7 @@ bot.on("message", (msg) => {
   // ignore commands (already handled above)
   if (text.startsWith("/start")) return;
 
-  bot.sendMessage(chatId, `📩 You said: ${text}`);
+  bot.sendMessage(chatId, `📩 You said: ${text}/n${chatId}`);
 });
 
 // ─────────────────────────────
