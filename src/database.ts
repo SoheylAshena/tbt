@@ -1,5 +1,4 @@
-import pkg from "pg";
-const { Pool } = pkg;
+import { Pool } from "pg";
 
 const pool = new Pool({
   user: process.env.DATABASE_USERNAME,
@@ -9,4 +8,11 @@ const pool = new Pool({
   port: 5432,
 });
 
-export default pool;
+pool.on("connect", () => {
+  console.log("✅ Connected to PostgreSQL");
+});
+
+export default {
+  query: (text: any, params: any) => pool.query(text, params),
+  pool,
+};
