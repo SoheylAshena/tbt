@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import database from "./database";
 import TelegramBot from "node-telegram-bot-api";
 
 // ─────────────────────────────
@@ -15,18 +15,7 @@ if (!token) {
 // ─────────────────────────────
 // database
 // ─────────────────────────────
-import pkg from "pg";
-const { Pool } = pkg;
-
-export const pool = new Pool({
-  user: process.env.DATABASE_USERNAME,
-  host: "localhost",
-  database: process.env.DATABASE_DB,
-  password: process.env.DATABASE_PASSWORD,
-  port: 5432,
-});
-
-const result = await pool.query("SELECT NOW()");
+const result = await database.query("SELECT NOW()");
 console.log(result.rows);
 
 // ─────────────────────────────
