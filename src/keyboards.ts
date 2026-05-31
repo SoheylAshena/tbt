@@ -1,25 +1,33 @@
-const mainMenu = {
+import type TelegramBot from "node-telegram-bot-api";
+
+type Btn = TelegramBot.KeyboardButton;
+
+export const mainMenu = {
   reply_markup: {
     keyboard: [
-      [{ text: "🛒 خرید VPN" }],
-      [{ text: "🛒 خرید اکانت Windscribe" }],
-      [{ text: "🛒 خرید اکانت هوش مصنوعی" }],
-      [{ text: "📋 سفارش‌های من" }],
-    ],
+      [{ text: "محصولات", style: "primary" }],
+      [{ text: "حساب کاربری من" }],
+      [{ text: "پشتیبانی" }],
+    ] satisfies Btn[][],
+    resize_keyboard: true,
+  },
+};
+export const productMenu = {
+  reply_markup: {
+    keyboard: [
+      [{ text: "VPN", style: "primary" }],
+      [{ text: "اکانت Windscribe", style: "primary" }],
+      [{ text: "اکانت WireGuard", style: "primary" }],
+      [{ text: "اکانت هوش مصنوعی", style: "primary" }],
+      [{ text: "بازگشت به منو اصلی", style: "success" }],
+    ] satisfies Btn[][],
     resize_keyboard: true,
   },
 };
 
-const vpnTypes = {
+export const pendingOrderMenu = {
   reply_markup: {
-    inline_keyboard: [
-      [{ text: "1 ماهه - ۱۵۰ هزار تومان", callback_data: "vpn_1m_150000" }],
-      [{ text: "3 ماهه - ۴۰۰ هزار تومان", callback_data: "vpn_3m_400000" }],
-      [{ text: "6 ماهه - ۷۰۰ هزار تومان", callback_data: "vpn_6m_700000" }],
-      [{ text: "🔙 بازگشت", callback_data: "back_to_main" }],
-    ],
+    keyboard: [[{ text: "لغو سفارش", style: "danger" }]] satisfies Btn[][],
+    resize_keyboard: true,
   },
 };
-
-// بعداً کیبوردهای Windscribe و AI رو هم اضافه می‌کنیم
-export { mainMenu, vpnTypes };

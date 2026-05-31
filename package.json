@@ -15,9 +15,10 @@
   "type": "module",
   "main": "dist/bot.js",
   "scripts": {
-    "dev": "pm2 start src/bot.ts --name tbt-dev --watch --interpreter tsx",
-    "build": "rimraf dist && tsc",
-    "start": "pm2 start dist/bot.js --name tbt"
+    "dev": "tsx watch src/bot.ts",
+    "build": "rimraf dist && tsup",
+    "start": "pm2 start dist/bot.js --name tbt",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
@@ -28,9 +29,9 @@
     "@types/node": "^25.9.1",
     "@types/node-telegram-bot-api": "^0.64.14",
     "@types/pg": "^8.20.0",
-    "nodemon": "^3.1.14",
+    "pm2": "^7.0.1",
     "rimraf": "^6.1.3",
-    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   }
