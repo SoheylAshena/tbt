@@ -13,6 +13,23 @@ if (!token) {
 }
 
 // ─────────────────────────────
+// database
+// ─────────────────────────────
+import pkg from "pg";
+const { Pool } = pkg;
+
+export const pool = new Pool({
+  user: process.env.DATABASE_USERNAME,
+  host: "localhost",
+  database: process.env.DATABASE_DB,
+  password: process.env.DATABASE_PASSWORD,
+  port: 5432,
+});
+
+const result = await pool.query("SELECT NOW()");
+console.log(result.rows);
+
+// ─────────────────────────────
 // 🤖 Create bot (polling mode)
 // ─────────────────────────────
 const bot = new TelegramBot(token, {
@@ -32,8 +49,7 @@ bot.onText(/\/start/, (msg) => {
 
   bot.sendMessage(
     chatId,
-    "👋 Welcome!\n\nI'm your Node.js Telegram bot.\nSend me a message and I’ll reply." +
-      chatId,
+    "👋 Welcome!\n\nI'm your Node.js Telegram bot.\nSend me a message and I’ll reply.",
   );
 });
 
