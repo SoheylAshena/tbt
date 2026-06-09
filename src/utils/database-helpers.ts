@@ -70,22 +70,20 @@ AND status IN (
   return order.rows[0];
 }
 
-export async function getUserExistingOrderID(senderID: number) {
-  const order = await db.query(
+export async function getUserExistingOrderID(senderID: number): Promise<number | null> {
+  const result = await db.query(
     `
-   SELECT id
-FROM orders
-WHERE user_id = $1
-AND status IN (
-  'pending_payment',
-  'waiting_email'
-) 
-RETURNING id
-  `,
+    SELECT id
+    FROM orders
+    WHERE user_id = $1
+      AND status IN ('pending_payment', 'waiting_email')
+    ORDER BY created_at DESC
+    LIMIT 1
+    `,
     [senderID],
   );
 
-  return order.rows[0].id;
+  return result.rows[0]?.id ?? null;
 }
 
 export async function updateExistingOrder(productTitle: string, productAmount: number, orderID: number) {
