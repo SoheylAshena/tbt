@@ -1,5 +1,6 @@
 import { User } from "node-telegram-bot-api";
 import { db } from "../config";
+import { UpdateOrderData } from "../types";
 
 export async function getUserData(userId: number) {
   const result = await db.query(
@@ -110,40 +111,23 @@ AND status IN (
   return result;
 }
 
-export async function updateExistingOrder(productTitle: string, productAmount: number, orderID: number) {
+export async function updateOrder(orderID: number, updates: UpdateOrderData) {
+  const fields = Object.entries(updates);
+  if (fields.length === 0) return;
+
+  const setClauses = fields.map(([column], index) => `${column} = $${index + 1}`);
+
+  const values = fields.map(([, value]) => value);
+
   await db.query(
     `
       UPDATE orders
       SET
-        product_name = $1,
-        amount = $2,
-        updated_at = CURRENT_TIMESTAMP,
-        receipt_file_id = NULL
-      WHERE id = $3
+        ${setClauses.join(", ")},
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $${fields.length + 1}
     `,
-    [productTitle, productAmount, orderID],
-  );
-}
-
-export async function updateOrderStatus(orderID: number, status: string) {
-  await db.query(
-    `
-  UPDATE orders
-  SET status = $1
-  WHERE id = $2
-`,
-    [status, orderID],
-  );
-}
-
-export async function updateOrderEmail(orderID: number, email: string) {
-  await db.query(
-    `
-  UPDATE orders
-  SET email = $1
-  WHERE id = $2
-`,
-    [email, orderID],
+    [...values, orderID],
   );
 }
 

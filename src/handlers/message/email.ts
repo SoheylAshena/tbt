@@ -1,6 +1,6 @@
-import { bot, db, waitingForEmail } from "../../config";
+import { bot, waitingForEmail } from "../../config";
 import { mainMenu, pendingOrderMenu } from "../../keyboards";
-import { getOrderData, updateOrderEmail, updateOrderStatus } from "../../utils/database-helpers";
+import { getOrderData, updateOrder } from "../../utils/database-helpers";
 
 export async function emailHandler(message: string, senderID: number, chatID: number) {
   const waitingOrderId = waitingForEmail.get(senderID);
@@ -16,8 +16,7 @@ export async function emailHandler(message: string, senderID: number, chatID: nu
     return;
   }
 
-  await updateOrderEmail(waitingOrderId, email);
-  await updateOrderStatus(waitingOrderId, "pending_payment");
+  await updateOrder(waitingOrderId, { email, status: "pending_payment" });
 
   const order = await getOrderData(waitingOrderId);
 

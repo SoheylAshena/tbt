@@ -1,10 +1,5 @@
 import { PRODUCTS } from "../../constants";
-import {
-  createOrder,
-  getUserExistingOrderID,
-  updateExistingOrder,
-  updateOrderStatus,
-} from "../../utils/database-helpers";
+import { createOrder, getUserExistingOrderID, updateOrder } from "../../utils/database-helpers";
 import { bot, waitingForEmail } from "../../config";
 import { pendingOrderMenu, waitingEmailMenu } from "../../keyboards";
 
@@ -15,14 +10,14 @@ export async function orderHandler(data: string, senderID: number, chatID: numbe
   let orderID = await getUserExistingOrderID(senderID);
 
   if (orderID) {
-    await updateExistingOrder(product.text, product.amount, orderID);
+    await updateOrder(orderID, { product_name: product.text, amount: product.amount });
   } else {
     orderID = await createOrder(senderID, product.text, product.amount);
   }
 
   if (data.startsWith("ai_")) {
     waitingForEmail.set(senderID, orderID);
-    await updateOrderStatus(orderID, "waiting_email");
+    await updateOrder(orderID, { status: "waiting_email" });
     return await bot.sendMessage(
       chatID,
       `
