@@ -79,7 +79,8 @@ WHERE user_id = $1
 AND status IN (
   'pending_payment',
   'waiting_email'
-)
+) 
+RETURNING id
   `,
     [senderID],
   );
