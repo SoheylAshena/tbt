@@ -2,7 +2,6 @@ import { adminReplyMode, bot } from "../../config";
 
 export async function adminReplyHandler(message: string, senderID: number, chatID: number) {
   const targetUserId = adminReplyMode.get(senderID);
-
   if (!targetUserId) return;
 
   await bot.sendMessage(

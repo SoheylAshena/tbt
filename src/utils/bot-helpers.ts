@@ -17,28 +17,24 @@ export async function requireJoin(chatId: number, userId: number) {
 
   if (joined) return true;
 
-  await bot.sendMessage(
-    chatId,
-    "❌ برای استفاده از ربات ابتدا عضو کانال شوید.",
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "📢 عضویت در کانال",
-              url: "https://t.me/WindCelll",
-            },
-          ],
-          [
-            {
-              text: "✅ بررسی عضویت",
-              callback_data: "check_join",
-            },
-          ],
+  await bot.sendMessage(chatId, "❌ برای استفاده از ربات ابتدا عضو کانال شوید.", {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: "📢 عضویت در کانال",
+            url: "https://t.me/WindCelll",
+          },
         ],
-      },
+        [
+          {
+            text: "✅ بررسی عضویت",
+            callback_data: "check_join",
+          },
+        ],
+      ],
     },
-  );
+  });
 
   return false;
 }

@@ -3,25 +3,26 @@ import { bot } from "../config";
 import { backToMainMenuHandler } from "./callback/back-to-main";
 import { adminReplyHandler } from "./callback/admin-reply";
 import { orderHandler } from "./callback/order";
-import { errorHandler } from "./callback/error";
 
 export async function handleCallbackQuery(callbackQuery: CallbackQuery) {
   const data = callbackQuery.data;
-  const msg = callbackQuery.message;
+  const senderID = callbackQuery.from.id;
+  const chatID = callbackQuery.message?.chat.id;
+  const ID = callbackQuery.id;
 
-  if (!msg?.from || !msg?.chat?.id || !data) return;
+  if (!senderID || !chatID || !data) return;
 
   try {
-    await bot.answerCallbackQuery(callbackQuery.id);
+    await bot.answerCallbackQuery(ID);
 
-    // const isJoined = await requireJoin(msg.chat.id, msg.from.id);
+    // const isJoined = await requireJoin(message.chat.id, message.from.id);
     // if (!isJoined) return;
 
     // await joinCheckHandler(callbackQuery);
-    await backToMainMenuHandler(callbackQuery);
-    await adminReplyHandler(callbackQuery);
-    await orderHandler(callbackQuery);
+    await backToMainMenuHandler(data, chatID);
+    await adminReplyHandler(data, senderID);
+    await orderHandler(data, senderID, chatID);
   } catch (err) {
-    await errorHandler(err);
+    console.error(err);
   }
 }

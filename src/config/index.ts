@@ -3,19 +3,10 @@ import TelegramBot from "node-telegram-bot-api";
 import { Pool } from "pg";
 dotenv.config();
 
-export function getTelegramBotToken() {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  if (!token) {
-    console.error("❌ TELEGRAM_BOT_TOKEN is missing");
-    process.exit(1);
-  }
-  return token;
-}
+const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN!;
+export const adminIDs = process.env.ADMIN_ID!.split(",").map((id) => Number(id.trim())) || [];
 
-export const adminIds =
-  process.env.ADMIN_ID?.split(",").map((id) => Number(id.trim())) || [];
-
-export const bot = new TelegramBot(getTelegramBotToken(), {
+export const bot = new TelegramBot(telegramBotToken, {
   polling: true,
 });
 

@@ -1,4 +1,3 @@
-import { type CallbackQuery } from "node-telegram-bot-api";
 import { PRODUCTS } from "../../constants";
 import {
   createOrder,
@@ -9,18 +8,9 @@ import {
 import { bot, waitingForEmail } from "../../config";
 import { pendingOrderMenu, waitingEmailMenu } from "../../keyboards";
 
-export async function orderHandler(callbackQuery: CallbackQuery) {
-  const data = callbackQuery.data;
-  const msg = callbackQuery.message;
-  const senderID = callbackQuery.from.id;
-
-  if (!msg || !senderID || !data) return;
-
+export async function orderHandler(data: string, senderID: number, chatID: number) {
   const product = PRODUCTS.find((item) => item.callback_data === data);
-
-  if (!product) {
-    return;
-  }
+  if (!product) return;
 
   let orderID = await getUserExistingOrderID(senderID);
 
@@ -31,10 +21,10 @@ export async function orderHandler(callbackQuery: CallbackQuery) {
   }
 
   if (data.startsWith("ai_")) {
-    waitingForEmail.set(callbackQuery.from.id, orderID);
+    waitingForEmail.set(senderID, orderID);
     await updateOrderStatus(orderID, "waiting_email");
     return await bot.sendMessage(
-      msg.chat.id,
+      chatID,
       `
 📧 لطفا ایمیل اکانت را ارسال کنید.
 
@@ -47,7 +37,7 @@ example@gmail.com
   }
 
   await bot.sendMessage(
-    msg!.chat.id,
+    chatID,
     `
 🛒 سفارش جدید
 

@@ -1,48 +1,6 @@
 import { User } from "node-telegram-bot-api";
 import { db } from "../config";
 
-export async function getUserId(user: User): Promise<number> {
-  const result = await db.query(
-    `
-      INSERT INTO users (
-        telegram_id,
-        username,
-        first_name,
-        updated_at
-      )
-      VALUES ($1,$2,$3,CURRENT_TIMESTAMP)
-
-      ON CONFLICT (telegram_id)
-      DO UPDATE SET
-        username = COALESCE(EXCLUDED.username, users.username),
-        first_name = COALESCE(EXCLUDED.first_name, users.first_name),
-        updated_at = CURRENT_TIMESTAMP
-
-      RETURNING telegram_id
-    `,
-    [user.id, user.username ?? null, user.first_name ?? null],
-  );
-
-  return result.rows[0].telegram_id;
-}
-
-export async function deleteUserPendingOrder(userId: number) {
-  const result = await db.query(
-    `
-     DELETE FROM orders
-WHERE user_id = $1
-AND status IN (
-  'pending_payment',
-  'waiting_email'
-)
-      RETURNING id
-    `,
-    [userId],
-  );
-
-  return result;
-}
-
 export async function getUserData(userId: number) {
   const result = await db.query(
     `
@@ -52,6 +10,55 @@ export async function getUserData(userId: number) {
   );
 
   return result.rows[0];
+}
+
+export async function createUser(user: User) {
+  await db.query(
+    `
+      INSERT INTO users (
+        telegram_id,
+        username,
+        first_name,
+        updated_at
+        )
+        VALUES ($1,$2,$3,CURRENT_TIMESTAMP)
+
+      ON CONFLICT (telegram_id)
+      DO UPDATE SET
+        username = COALESCE(EXCLUDED.username, users.username),
+        first_name = COALESCE(EXCLUDED.first_name, users.first_name),
+        updated_at = CURRENT_TIMESTAMP
+    `,
+    [user.id, user.username ?? null, user.first_name ?? null],
+  );
+}
+
+export async function createOrder(senderID: number, productTitle: string, productAmount: number) {
+  console.log(senderID);
+  const createdOrder = await db.query(
+    `
+      INSERT INTO orders (
+        user_id,
+        product_name,
+        amount,
+        status,
+        created_at,
+        updated_at
+      )
+      VALUES (
+        $1,
+        $2,
+        $3,
+        'pending_payment',
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+      )
+      RETURNING id
+    `,
+    [senderID, productTitle, productAmount],
+  );
+
+  return createdOrder.rows[0].id;
 }
 
 export async function getUserPendingOrder(senderID: number) {
@@ -86,6 +93,23 @@ export async function getUserExistingOrderID(senderID: number) {
   return result.rows[0]?.id;
 }
 
+export async function deleteUserExistingOrder(userId: number) {
+  const result = await db.query(
+    `
+     DELETE FROM orders
+WHERE user_id = $1
+AND status IN (
+  'pending_payment',
+  'waiting_email'
+)
+      RETURNING id
+    `,
+    [userId],
+  );
+
+  return result;
+}
+
 export async function updateExistingOrder(productTitle: string, productAmount: number, orderID: number) {
   await db.query(
     `
@@ -101,34 +125,6 @@ export async function updateExistingOrder(productTitle: string, productAmount: n
   );
 }
 
-export async function createOrder(senderID: number, productTitle: string, productAmount: number) {
-  console.log(senderID);
-  const createdOrder = await db.query(
-    `
-      INSERT INTO orders (
-        user_id,
-        product_name,
-        amount,
-        status,
-        created_at,
-        updated_at
-      )
-      VALUES (
-        $1,
-        $2,
-        $3,
-        'pending_payment',
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
-      )
-      RETURNING id
-    `,
-    [senderID, productTitle, productAmount],
-  );
-
-  return createdOrder.rows[0].id;
-}
-
 export async function updateOrderStatus(orderID: number, status: string) {
   await db.query(
     `
@@ -138,4 +134,28 @@ export async function updateOrderStatus(orderID: number, status: string) {
 `,
     [status, orderID],
   );
+}
+
+export async function updateOrderEmail(orderID: number, email: string) {
+  await db.query(
+    `
+  UPDATE orders
+  SET email = $1
+  WHERE id = $2
+`,
+    [email, orderID],
+  );
+}
+
+export async function getOrderData(orderID: number) {
+  const result = await db.query(
+    `
+    SELECT *
+    FROM orders
+    WHERE id = $1
+    `,
+    [orderID],
+  );
+
+  return result.rows[0];
 }

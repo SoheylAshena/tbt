@@ -30,7 +30,6 @@ ${senderUsername ? `@${senderUsername}` : "بدون یوزرنیم"}
     );
   } catch (err) {
     console.error(err);
-
     await sendError(msg.chat.id, "خطا در ثبت رسید پرداخت.");
   }
 }

@@ -14,9 +14,7 @@ export function createInlineKeys(data: ProductButton[]) {
 }
 
 export function createProductKeyboard(keyword: string) {
-  const products = PRODUCTS.filter((item) =>
-    item.callback_data.startsWith(keyword),
-  );
+  const products = PRODUCTS.filter((item) => item.callback_data.startsWith(keyword));
 
   return createInlineKeys(products);
 }

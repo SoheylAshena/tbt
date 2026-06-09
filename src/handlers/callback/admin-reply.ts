@@ -1,21 +1,12 @@
-import { type CallbackQuery } from "node-telegram-bot-api";
-import { adminIds, adminReplyMode, bot } from "../../config";
+import { adminIDs, adminReplyMode, bot } from "../../config";
 
-export async function adminReplyHandler(callbackQuery: CallbackQuery) {
-  const data = callbackQuery.data;
+export async function adminReplyHandler(data: string, senderID: number) {
+  if (data!.startsWith("reply_")) return;
+  if (!adminIDs.includes(senderID)) return;
 
-  if (data!.startsWith("reply_")) {
-    if (!adminIds.includes(callbackQuery.from.id)) {
-      throw new Error();
-    }
+  const recieverID = Number(data!.replace("reply_", ""));
 
-    const userId = Number(data!.replace("reply_", ""));
+  adminReplyMode.set(senderID, recieverID);
 
-    adminReplyMode.set(callbackQuery.from.id, userId);
-
-    await bot.sendMessage(
-      callbackQuery.from.id,
-      "✍️ پیام خود را برای مشتری ارسال کنید.",
-    );
-  }
+  await bot.sendMessage(senderID, "✍️ پیام خود را برای مشتری ارسال کنید.");
 }

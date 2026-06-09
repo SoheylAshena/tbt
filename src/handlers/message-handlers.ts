@@ -2,7 +2,6 @@ import { type Message } from "node-telegram-bot-api";
 import { adminReplyHandler } from "./message/admin-reply";
 import { emailHandler } from "./message/email";
 import { textHandler } from "./message/text";
-import { errorHandler } from "./message/error";
 
 export async function handleMessage(msg: Message) {
   const message = msg.text;
@@ -19,6 +18,6 @@ export async function handleMessage(msg: Message) {
     await emailHandler(message, senderID, chatID);
     await textHandler(message, senderID, chatID);
   } catch (err) {
-    await errorHandler(err);
+    console.error(err);
   }
 }

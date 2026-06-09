@@ -1,5 +1,5 @@
-import { adminIds, bot } from "../config";
-import { deleteUserPendingOrder, getUserData } from "./database-helpers";
+import { adminIDs, bot, waitingForEmail } from "../config";
+import { deleteUserExistingOrder, getUserData } from "./database-helpers";
 import { mainMenu } from "../keyboards";
 
 export async function sendError(chatId: number, text: string) {
@@ -27,7 +27,11 @@ export async function displayUserInfo(senderID: number, chatID: number) {
 }
 
 export async function cancelOrder(senderID: number, chatID: number) {
-  const result = await deleteUserPendingOrder(senderID);
+  if (waitingForEmail.get(senderID)) {
+    waitingForEmail.delete(senderID);
+  }
+
+  const result = await deleteUserExistingOrder(senderID);
 
   if (result.rows.length === 0) {
     await bot.sendMessage(chatID, "❌ سفارش فعالی پیدا نشد.", mainMenu);
@@ -38,7 +42,7 @@ export async function cancelOrder(senderID: number, chatID: number) {
 }
 
 export async function sendPhotoToAdmins(fileID: string, caption: string, senderID: number) {
-  for (const adminId of adminIds) {
+  for (const adminId of adminIDs) {
     try {
       await bot.sendPhoto(adminId, fileID, {
         caption,
