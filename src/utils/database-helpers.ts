@@ -102,6 +102,7 @@ export async function updateExistingOrder(productTitle: string, productAmount: n
 }
 
 export async function createOrder(senderID: number, productTitle: string, productAmount: number) {
+  console.log(senderID);
   const createdOrder = await db.query(
     `
       INSERT INTO orders (
