@@ -27,7 +27,7 @@ export async function orderHandler(callbackQuery: CallbackQuery) {
   if (orderID) {
     await updateExistingOrder(product.text, product.amount, orderID);
   } else {
-    orderID = createOrder(senderID, product.text, product.amount);
+    orderID = await createOrder(senderID, product.text, product.amount);
   }
 
   if (data.startsWith("ai_")) {

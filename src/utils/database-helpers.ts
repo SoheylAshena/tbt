@@ -70,7 +70,7 @@ AND status IN (
   return order.rows[0];
 }
 
-export async function getUserExistingOrderID(senderID: number): Promise<number | null> {
+export async function getUserExistingOrderID(senderID: number) {
   const result = await db.query(
     `
     SELECT id
@@ -83,7 +83,7 @@ export async function getUserExistingOrderID(senderID: number): Promise<number |
     [senderID],
   );
 
-  return result.rows[0]?.id ?? null;
+  return result.rows[0]?.id;
 }
 
 export async function updateExistingOrder(productTitle: string, productAmount: number, orderID: number) {
