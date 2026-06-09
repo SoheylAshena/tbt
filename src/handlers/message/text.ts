@@ -1,7 +1,8 @@
-import { createProductKeyboard } from "../../utils/keyboard-helpers";
+import { createInlineKeys, createProductKeyboard } from "../../utils/keyboard-helpers";
 import { bot } from "../../config";
 import { mainMenu, productMenu } from "../../keyboards";
 import { cancelOrder, displayUserInfo } from "../../utils/message-helpers";
+import { PAYMENT_METHODS } from "../../constants";
 
 export async function textHandler(message: string, senderID: number, chatID: number) {
   switch (message) {
@@ -38,6 +39,7 @@ export async function textHandler(message: string, senderID: number, chatID: num
       break;
 
     case "افزایش موجودی":
+      await bot.sendMessage(chatID, `روش پرداخت خود را انتخاب نمایید:`, createInlineKeys(PAYMENT_METHODS));
       break;
 
     case "پرداخت از موجودی":

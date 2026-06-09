@@ -1,4 +1,4 @@
-import { bot } from "../config";
+import { adminIds, bot } from "../config";
 import { deleteUserPendingOrder, getUserData } from "./database-helpers";
 import { mainMenu } from "../keyboards";
 
@@ -35,4 +35,26 @@ export async function cancelOrder(senderID: number, chatID: number) {
   }
 
   await bot.sendMessage(chatID, "✅ سفارش لغو شد.", mainMenu);
+}
+
+export async function sendPhotoToAdmins(fileID: string, caption: string, senderID: number) {
+  for (const adminId of adminIds) {
+    try {
+      await bot.sendPhoto(adminId, fileID, {
+        caption,
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: "💬 پاسخ به مشتری",
+                callback_data: `reply_${senderID}`,
+              },
+            ],
+          ],
+        },
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
