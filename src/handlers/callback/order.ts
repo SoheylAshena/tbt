@@ -12,7 +12,7 @@ import { pendingOrderMenu, waitingEmailMenu } from "../../keyboards";
 export async function orderHandler(callbackQuery: CallbackQuery) {
   const data = callbackQuery.data;
   const msg = callbackQuery.message;
-  const senderID = msg?.from?.id;
+  const senderID = callbackQuery.from.id;
 
   if (!msg || !senderID || !data) return;
 
