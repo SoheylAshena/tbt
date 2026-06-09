@@ -1,7 +1,7 @@
 import { adminIDs, adminReplyMode, bot } from "../../config";
 
 export async function adminReplyHandler(data: string, senderID: number) {
-  if (data!.startsWith("reply_")) return;
+  if (!data.startsWith("reply_")) return;
   if (!adminIDs.includes(senderID)) return;
 
   const recieverID = Number(data!.replace("reply_", ""));
