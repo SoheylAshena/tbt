@@ -2,7 +2,7 @@ import { type CallbackQuery } from "node-telegram-bot-api";
 import { PRODUCTS } from "../../constants";
 import { getUserId } from "../../utils/database-helpers";
 import { bot, db, waitingForEmail } from "../../config";
-import { pendingOrderMenu } from "../../keyboards";
+import { pendingOrderMenu, waitingEmailMenu } from "../../keyboards";
 
 export async function orderHandler(callbackQuery: CallbackQuery) {
   const data = callbackQuery.data;
@@ -96,7 +96,7 @@ LIMIT 1
 
 example@gmail.com
 `,
-      pendingOrderMenu,
+      waitingEmailMenu,
     );
   }
 
