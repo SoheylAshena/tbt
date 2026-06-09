@@ -1,25 +1,23 @@
-import { type Message } from "node-telegram-bot-api";
 import { bot, db, waitingForEmail } from "../../config";
 import { mainMenu, pendingOrderMenu } from "../../keyboards";
 
-export async function emailHandler(msg: Message) {
-  const waitingOrderId = waitingForEmail.get(msg.from!.id);
+export async function emailHandler(message: string, senderID: number, chatID: number) {
+  const waitingOrderId = waitingForEmail.get(senderID);
 
   if (!waitingOrderId) return;
 
-  if (msg.text === "لغو سفارش") {
-    waitingForEmail.delete(msg.from!.id);
+  if (message === "لغو سفارش") {
+    waitingForEmail.delete(senderID);
     return;
   }
 
-  const chatId = msg.chat.id;
-  const email = msg.text!.trim();
+  const email = message!.trim();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!emailRegex.test(email)) {
-    waitingForEmail.delete(msg.from!.id);
-    bot.sendMessage(chatId, "ایمیلت معتبر نیست سکسی", mainMenu);
+    waitingForEmail.delete(senderID);
+    bot.sendMessage(chatID, "ایمیل وارد شده معتبر نیست", mainMenu);
     return;
   }
 
@@ -34,7 +32,7 @@ export async function emailHandler(msg: Message) {
     [email, waitingOrderId],
   );
 
-  waitingForEmail.delete(msg.from!.id);
+  waitingForEmail.delete(senderID);
 
   const orderResult = await db.query(
     `
@@ -48,7 +46,7 @@ export async function emailHandler(msg: Message) {
   const order = orderResult.rows[0];
 
   await bot.sendMessage(
-    chatId,
+    chatID,
     `
 🛒 سفارش جدید
 
@@ -63,13 +61,6 @@ ${order.email}
 
 💰 مبلغ:
 ${Number(order.amount).toLocaleString("fa-IR")} تومان
-
-💳 شماره کارت:
-
-6219861078593273
-به نام مهدی عنایتی
-
-📸 پس از پرداخت، عکس رسید را ارسال کنید.
 
 ❌ در صورت انصراف، روی "لغو سفارش" بزنید.
 `,

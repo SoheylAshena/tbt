@@ -1,12 +1,20 @@
 import { type CallbackQuery } from "node-telegram-bot-api";
 import { PRODUCTS } from "../../constants";
-import { getUserId } from "../../utils/database-helpers";
-import { bot, db, waitingForEmail } from "../../config";
+import {
+  createOrder,
+  getUserExistingOrderID,
+  updateExistingOrder,
+  updateOrderStatus,
+} from "../../utils/database-helpers";
+import { bot, waitingForEmail } from "../../config";
 import { pendingOrderMenu, waitingEmailMenu } from "../../keyboards";
 
 export async function orderHandler(callbackQuery: CallbackQuery) {
   const data = callbackQuery.data;
   const msg = callbackQuery.message;
+  const senderID = msg?.from?.id;
+
+  if (!msg || !senderID || !data) return;
 
   const product = PRODUCTS.find((item) => item.callback_data === data);
 
@@ -14,81 +22,19 @@ export async function orderHandler(callbackQuery: CallbackQuery) {
     return;
   }
 
-  const userId = await getUserId(callbackQuery.from);
+  let orderID = await getUserExistingOrderID(senderID);
 
-  const existingOrder = await db.query(
-    `
-   SELECT id
-FROM orders
-WHERE user_id = $1
-AND status IN (
-  'pending_payment',
-  'waiting_email'
-)
-ORDER BY updated_at DESC
-LIMIT 1
-  `,
-    [userId],
-  );
-
-  let orderId: number;
-
-  if (existingOrder.rows.length > 0) {
-    orderId = existingOrder.rows[0].id;
-
-    await db.query(
-      `
-      UPDATE orders
-      SET
-        product_name = $1,
-        amount = $2,
-        updated_at = CURRENT_TIMESTAMP,
-        receipt_file_id = NULL
-      WHERE id = $3
-    `,
-      [product.text, product.amount, orderId],
-    );
+  if (orderID) {
+    await updateExistingOrder(product.text, product.amount, orderID);
   } else {
-    const orderResult = await db.query(
-      `
-      INSERT INTO orders (
-        user_id,
-        product_name,
-        amount,
-        status,
-        created_at,
-        updated_at
-      )
-      VALUES (
-        $1,
-        $2,
-        $3,
-        'pending_payment',
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
-      )
-      RETURNING id
-    `,
-      [userId, product.text, product.amount],
-    );
-
-    orderId = orderResult.rows[0].id;
+    orderID = createOrder(senderID, product.text, product.amount);
   }
 
-  if (data!.startsWith("ai_")) {
-    waitingForEmail.set(callbackQuery.from.id, orderId);
-
-    await db.query(
-      `
-  UPDATE orders
-  SET status = 'waiting_email'
-  WHERE id = $1
-`,
-      [orderId],
-    );
-
+  if (data.startsWith("ai_")) {
+    waitingForEmail.set(callbackQuery.from.id, orderID);
+    await updateOrderStatus(orderID, "waiting_email");
     return await bot.sendMessage(
-      msg!.chat.id,
+      msg.chat.id,
       `
 📧 لطفا ایمیل اکانت را ارسال کنید.
 
@@ -106,20 +52,13 @@ example@gmail.com
 🛒 سفارش جدید
 
 📌 شماره سفارش:
-#${orderId}
+#${orderID}
 
 📦 محصول:
 ${product.text}
 
 💰 مبلغ:
 ${product.amount.toLocaleString("fa-IR")} تومان
-
-💳 شماره کارت:
-
-6219861078593273
-به نام مهدی عنایتی
-
-📸 پس از پرداخت، عکس رسید را ارسال کنید.
 
 ❌ در صورت انصراف، روی "لغو سفارش" بزنید.
 `,

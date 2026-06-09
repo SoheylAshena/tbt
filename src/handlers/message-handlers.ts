@@ -5,16 +5,19 @@ import { textHandler } from "./message/text";
 import { errorHandler } from "./message/error";
 
 export async function handleMessage(msg: Message) {
-  if (!msg.text || !msg.chat.id || !msg.from || msg.text.startsWith("/"))
-    return;
+  const message = msg.text;
+  const senderID = msg.from?.id;
+  const chatID = msg.chat.id;
+
+  if (!message || !chatID || !senderID || message.startsWith("/")) return;
 
   try {
-    // const isJoined = await requireJoin(msg.chat.id, msg.from.id);
+    // const isJoined = await requireJoin(chatID, senderID);
     // if (!isJoined) return;
 
-    await adminReplyHandler(msg);
-    await emailHandler(msg);
-    await textHandler(msg);
+    await adminReplyHandler(message, senderID, chatID);
+    await emailHandler(message, senderID, chatID);
+    await textHandler(message, senderID, chatID);
   } catch (err) {
     await errorHandler(err);
   }

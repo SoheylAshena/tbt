@@ -1,16 +1,9 @@
-import { type Message } from "node-telegram-bot-api";
 import { createProductKeyboard } from "../../utils/keyboard-helpers";
 import { bot } from "../../config";
 import { mainMenu, productMenu } from "../../keyboards";
 import { cancelOrder, displayUserInfo } from "../../utils/message-helpers";
 
-export async function textHandler(msg: Message) {
-  const message = msg.text;
-  const senderID = msg.from?.id;
-  const chatID = msg.chat.id;
-
-  if (!message || !senderID || !chatID) return;
-
+export async function textHandler(message: string, senderID: number, chatID: number) {
   switch (message) {
     case "VPN":
       const inlineKeysVPN = createProductKeyboard("vpn");

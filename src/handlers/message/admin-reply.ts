@@ -1,8 +1,7 @@
-import { Message } from "node-telegram-bot-api";
 import { adminReplyMode, bot } from "../../config";
 
-export async function adminReplyHandler(msg: Message) {
-  const targetUserId = adminReplyMode.get(msg.from!.id);
+export async function adminReplyHandler(message: string, senderID: number, chatID: number) {
+  const targetUserId = adminReplyMode.get(senderID);
 
   if (!targetUserId) return;
 
@@ -11,11 +10,11 @@ export async function adminReplyHandler(msg: Message) {
     `
 📩 پیام پشتیبانی:
 
-${msg.text}
+${message}
 `,
   );
 
-  await bot.sendMessage(msg.chat.id, "✅ پیام ارسال شد.");
+  await bot.sendMessage(chatID, "✅ پیام ارسال شد.");
 
-  adminReplyMode.delete(msg.from!.id);
+  adminReplyMode.delete(senderID);
 }
