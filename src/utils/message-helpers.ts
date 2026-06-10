@@ -109,6 +109,15 @@ export async function payFromBalance(userID: number, chatID: number) {
 شناسه کاربری مشتری: ${userID}
 `,
       );
+
+      bot.sendMessage(
+        userID,
+        `
+سفارش شما ثبت شد، پشتیبان به زودی با شما تماس میگیرد.
+ممنون از اعتمادتون
+        `,
+        mainMenu,
+      );
     }
   } catch (err) {
     console.error(err);
