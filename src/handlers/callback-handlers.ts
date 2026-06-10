@@ -3,6 +3,7 @@ import { bot } from "../config";
 import { backToMainMenuHandler } from "./callback/back-to-main";
 import { adminReplyHandler } from "./callback/admin-reply";
 import { orderHandler } from "./callback/order";
+import { paymentMethodHandler } from "./callback/payment";
 
 export async function handleCallbackQuery(callbackQuery: CallbackQuery) {
   const data = callbackQuery.data;
@@ -22,6 +23,7 @@ export async function handleCallbackQuery(callbackQuery: CallbackQuery) {
     await backToMainMenuHandler(data, chatID);
     await adminReplyHandler(data, senderID);
     await orderHandler(data, senderID, chatID);
+    await paymentMethodHandler(data, chatID);
   } catch (err) {
     console.error(err);
   }
