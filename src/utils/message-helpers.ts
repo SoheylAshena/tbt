@@ -91,6 +91,7 @@ export async function payFromBalance(userID: number, chatID: number) {
 
 هزینه سفارش: ${amount}
 `,
+        mainMenu,
       );
     } else {
       const newBalance = balance - amount;
