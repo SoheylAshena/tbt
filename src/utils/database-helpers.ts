@@ -34,6 +34,15 @@ export async function createUser(user: User) {
   );
 }
 
+export async function updateUserBalance(userID: number, newBalance: number) {
+  await db.query(
+    `
+    UPDATE users SET balance = $1 WHERE telegram_id = $2
+`,
+    [newBalance, userID],
+  );
+}
+
 export async function createOrder(senderID: number, productTitle: string, productAmount: number) {
   console.log(senderID);
   const createdOrder = await db.query(

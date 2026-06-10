@@ -1,5 +1,11 @@
 import { adminIDs, bot, waitingForEmail } from "../config";
-import { deleteUserExistingOrder, getUserData } from "./database-helpers";
+import {
+  deleteUserExistingOrder,
+  getUserData,
+  getUserPendingOrder,
+  updateOrder,
+  updateUserBalance,
+} from "./database-helpers";
 import { mainMenu } from "../keyboards";
 
 export async function sendError(chatId: number, text: string) {
@@ -52,6 +58,74 @@ export async function sendPhotoToAdmins(fileID: string, caption: string, senderI
               {
                 text: "💬 پاسخ به مشتری",
                 callback_data: `reply_${senderID}`,
+              },
+            ],
+          ],
+        },
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}
+
+export async function payFromBalance(userID: number, chatID: number) {
+  const userData = await getUserData(userID);
+  const userName = userData.username;
+  const balance = userData.balance;
+
+  const pendingOrder = await getUserPendingOrder(userID);
+
+  const orderID = pendingOrder.id;
+  const productName = pendingOrder.product_name;
+  const amount = pendingOrder.amount;
+
+  try {
+    if (balance < amount) {
+      await bot.sendMessage(
+        chatID,
+        `
+موجودی ناکافی، لطفا ابتدا موجودی خود را افزایش دهید
+
+موجودی فعلی: ${balance}
+
+هزینه سفارش: ${amount}
+`,
+      );
+    } else {
+      const newBalance = balance - amount;
+      if (newBalance < 0) return;
+
+      await updateUserBalance(userID, newBalance);
+      await updateOrder(orderID, { status: "paid" });
+      await sendMessageToAdmins(
+        userID,
+        `
+یک سفارش ثبت و پرداخت شد:
+
+محصول: ${productName}
+
+سفارش دهنده: ${userName}
+شناسه کاربری مشتری: ${userID}
+`,
+      );
+    }
+  } catch (err) {
+    console.error(err);
+    await bot.sendMessage(chatID, "خطایی رخ داد.");
+  }
+}
+
+export async function sendMessageToAdmins(userID: number, message: string) {
+  for (const adminId of adminIDs) {
+    try {
+      await bot.sendMessage(adminId, message, {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: "💬 پاسخ به مشتری",
+                callback_data: `reply_${userID}`,
               },
             ],
           ],
