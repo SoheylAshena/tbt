@@ -1,7 +1,7 @@
 import { adminReplyMode, bot, waitingForBalance } from "../../config";
 import { getUserData, updateUserBalance } from "../../utils/database-helpers";
 
-export async function adminBalanceSetHandler(message: string, adminID: number, chatID: number) {
+export async function adminBalanceSetHandler(message: string, adminID: number) {
   if (adminReplyMode.get(adminID)) {
     adminReplyMode.delete(adminID);
   }
@@ -21,7 +21,7 @@ export async function adminBalanceSetHandler(message: string, adminID: number, c
   await updateUserBalance(targetUserID, finalBalance);
 
   await bot.sendMessage(
-    chatID,
+    targetUserID,
     `موجودی شما افزایش یافت،
 موجودی: ${finalBalance}
 `,
