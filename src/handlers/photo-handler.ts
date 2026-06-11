@@ -1,5 +1,5 @@
 import { type Message } from "node-telegram-bot-api";
-import { bot } from "../config";
+import { bot, waitingForRecipt } from "../config";
 import { mainMenu } from "../keyboards";
 import { sendError, sendPhotoToAdmins } from "../utils/message-helpers";
 
@@ -9,6 +9,12 @@ export async function handlePhoto(msg: Message) {
   const senderUsername = msg.from?.username;
 
   if (!senderID || !chatID || !msg.photo?.length) return;
+
+  if (!waitingForRecipt.get(senderID)) {
+    bot.sendMessage(chatID, "چرا الکی عکس میفرستی؟ بگیرم بکنمت؟");
+  }
+
+  waitingForRecipt.delete(senderID);
 
   try {
     const fileId = msg.photo[msg.photo.length - 1].file_id;

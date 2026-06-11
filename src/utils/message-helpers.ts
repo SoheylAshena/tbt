@@ -56,8 +56,19 @@ export async function sendPhotoToAdmins(fileID: string, caption: string, senderI
           inline_keyboard: [
             [
               {
-                text: "💬 پاسخ به مشتری",
+                text: "تایید",
+                style: "primary",
+                callback_data: `approve_${senderID}`,
+              },
+              {
+                text: "لغو",
+                style: "danger",
                 callback_data: `reply_${senderID}`,
+              },
+              {
+                text: "بلاک",
+                style: "danger",
+                callback_data: `block_${senderID}`,
               },
             ],
           ],

@@ -6,9 +6,9 @@ import { PAYMENT_METHODS } from "../../constants";
 
 export async function textHandler(message: string, senderID: number, chatID: number) {
   switch (message) {
-    case "V2Ray VPN":
+    case "V2ray VPN":
       const inlineKeysVPN = createProductKeyboard("vpn");
-      await bot.sendMessage(chatID, "نوع اشتراک VPN را انتخاب کنید:", inlineKeysVPN);
+      await bot.sendMessage(chatID, "نوع اشتراک را انتخاب کنید:", inlineKeysVPN);
       break;
 
     case "اکانت Windscribe":

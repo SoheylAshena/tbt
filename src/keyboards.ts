@@ -19,7 +19,7 @@ export const mainMenu = {
 export const productMenu = {
   reply_markup: {
     keyboard: [
-      [{ text: "VPN", style: "primary" }],
+      [{ text: "V2ray VPN", style: "primary" }],
       [
         { text: "اکانت Windscribe", style: "primary" },
         { text: "اکانت WireGuard", style: "primary" },

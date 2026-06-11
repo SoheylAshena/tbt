@@ -23,7 +23,7 @@ export async function handleCallbackQuery(callbackQuery: CallbackQuery) {
     await backToMainMenuHandler(data, chatID);
     await adminReplyHandler(data, senderID);
     await orderHandler(data, senderID, chatID);
-    await paymentMethodHandler(data, chatID);
+    await paymentMethodHandler(data, chatID, senderID);
   } catch (err) {
     console.error(err);
   }
