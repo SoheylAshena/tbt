@@ -4,10 +4,6 @@ export async function adminReplyHandler(message: string, senderID: number) {
   const targetUserId = adminReplyMode.get(senderID);
   if (!targetUserId) return;
 
-  if (waitingForBalance.get(senderID)) {
-    waitingForBalance.delete(senderID);
-  }
-
   await bot.sendMessage(
     targetUserId,
     `

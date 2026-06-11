@@ -12,10 +12,17 @@ export async function adminReplyHandler(data: string, senderID: number) {
     switch (mode) {
       case "reply":
         adminReplyMode.set(senderID, receiverID);
+        if (waitingForBalance.get(senderID)) {
+          waitingForBalance.delete(senderID);
+        }
+
         await bot.sendMessage(senderID, "✍️ پیام خود را برای مشتری ارسال کنید.");
         break;
       case "approve":
         waitingForBalance.set(senderID, receiverID);
+        if (adminReplyMode.get(senderID)) {
+          adminReplyMode.delete(senderID);
+        }
         await bot.sendMessage(senderID, "مقدار موجودی برای افزایش را وارد کنید:");
         break;
       case "block":
