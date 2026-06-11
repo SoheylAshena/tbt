@@ -15,8 +15,8 @@ export async function handleMessage(msg: Message) {
     // const isJoined = await requireJoin(chatID, senderID);
     // if (!isJoined) return;
 
-    await adminBalanceSetHandler(message, senderID, chatID);
     await adminReplyHandler(message, senderID, chatID);
+    await adminBalanceSetHandler(message, senderID, chatID);
     await emailHandler(message, senderID, chatID);
     await textHandler(message, senderID, chatID);
   } catch (err) {

@@ -1,4 +1,4 @@
-import { adminReplyMode, bot, waitingForBalance } from "../../config";
+import { adminReplyMode, bot } from "../../config";
 
 export async function adminReplyHandler(message: string, senderID: number, chatID: number) {
   const targetUserId = adminReplyMode.get(senderID);
