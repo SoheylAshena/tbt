@@ -26,4 +26,11 @@ export async function adminBalanceSetHandler(message: string, adminID: number) {
 موجودی: ${finalBalance}
 `,
   );
+
+  await bot.sendMessage(
+    adminID,
+    `موجودی ${targetUserID} افزایش یافت،
+موجودی: ${finalBalance}
+`,
+  );
 }
