@@ -10,7 +10,7 @@ export async function handleStartCommand(msg: Message) {
       reaction: [{ type: "emoji", emoji: "❤‍🔥" }],
     });
 
-    await bot.sendMessage(msg.chat.id, `👋 سلام ${msg.from.first_name}!\nبه ربات فروش ویندسل خوش آمدید.`, mainMenu);
+    await bot.sendMessage(msg.chat.id, `سلام، به سوپربات TelFactory خوش آمدید.`, mainMenu);
   } catch (err) {
     console.error(err);
   }
