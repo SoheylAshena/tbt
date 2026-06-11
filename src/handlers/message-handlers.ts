@@ -15,10 +15,10 @@ export async function handleMessage(msg: Message) {
     // const isJoined = await requireJoin(chatID, senderID);
     // if (!isJoined) return;
 
-    await adminReplyHandler(message, senderID, chatID);
-    await adminBalanceSetHandler(message, senderID, chatID);
-    await emailHandler(message, senderID, chatID);
-    await textHandler(message, senderID, chatID);
+    await adminReplyHandler(message, senderID);
+    await adminBalanceSetHandler(message, senderID);
+    await emailHandler(message, senderID);
+    await textHandler(message, senderID);
   } catch (err) {
     console.error(err);
   }

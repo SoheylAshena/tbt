@@ -2,7 +2,7 @@ import { bot, waitingForEmail } from "../../config";
 import { mainMenu, pendingOrderMenu } from "../../keyboards";
 import { getOrderData, updateOrder } from "../../utils/database-helpers";
 
-export async function emailHandler(message: string, senderID: number, chatID: number) {
+export async function emailHandler(message: string, senderID: number) {
   const waitingOrderId = waitingForEmail.get(senderID);
   if (!waitingOrderId) return;
 
@@ -12,7 +12,7 @@ export async function emailHandler(message: string, senderID: number, chatID: nu
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!emailRegex.test(email)) {
-    bot.sendMessage(chatID, "ایمیل وارد شده معتبر نیست", mainMenu);
+    bot.sendMessage(senderID, "ایمیل وارد شده معتبر نیست", mainMenu);
     return;
   }
 
@@ -21,7 +21,7 @@ export async function emailHandler(message: string, senderID: number, chatID: nu
   const order = await getOrderData(waitingOrderId);
 
   await bot.sendMessage(
-    chatID,
+    senderID,
     `
 🛒 سفارش جدید
 

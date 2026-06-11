@@ -1,6 +1,10 @@
-import { adminReplyMode, bot } from "../../config";
+import { adminReplyMode, bot, waitingForBalance } from "../../config";
 
-export async function adminReplyHandler(message: string, senderID: number, chatID: number) {
+export async function adminReplyHandler(message: string, senderID: number) {
+  if (waitingForBalance.get(senderID)) {
+    waitingForBalance.delete(senderID);
+  }
+
   const targetUserId = adminReplyMode.get(senderID);
   if (!targetUserId) return;
 
@@ -13,7 +17,7 @@ ${message}
 `,
   );
 
-  await bot.sendMessage(chatID, "✅ پیام ارسال شد.");
+  await bot.sendMessage(senderID, "✅ پیام ارسال شد.");
 
   adminReplyMode.delete(senderID);
 }
