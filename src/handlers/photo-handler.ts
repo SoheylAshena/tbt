@@ -11,7 +11,7 @@ export async function handlePhoto(msg: Message) {
   if (!senderID || !chatID || !msg.photo?.length) return;
 
   if (!waitingForRecipt.get(senderID)) {
-    bot.sendMessage(chatID, "چرا الکی عکس میفرستی؟ بگیرم بکنمت؟");
+    bot.sendMessage(chatID, "عکس نامعتبر❗");
     return;
   }
 
