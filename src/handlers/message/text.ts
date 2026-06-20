@@ -26,6 +26,10 @@ export async function textHandler(message: string, senderID: number) {
       await bot.sendMessage(senderID, "نوع اشتراک هوش مصنوعی را انتخاب کنید:", inlineKeysAI);
       break;
 
+    case "پشتیبانی":
+      await bot.sendMessage(senderID, "برای ارتباط با پشتیبانی به آیدی زیر پیام دهید:\n\n@realhamoon");
+      break;
+
     case "محصولات":
       await bot.sendMessage(senderID, "دسته بندی محصولات:", productMenu);
       break;

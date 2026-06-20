@@ -20,11 +20,11 @@ export const productMenu = {
   reply_markup: {
     keyboard: [
       [{ text: "V2ray VPN", style: "primary" }],
-      [
-        { text: "اکانت Windscribe", style: "primary" },
-        { text: "اکانت WireGuard", style: "primary" },
-      ],
-      [{ text: "اکانت هوش مصنوعی", style: "primary" }],
+      // [
+      //   { text: "اکانت Windscribe", style: "primary" },
+      //   { text: "اکانت WireGuard", style: "primary" },
+      // ],
+      // [{ text: "اکانت هوش مصنوعی", style: "primary" }],
       [{ text: "بازگشت به منو اصلی", style: "success" }],
     ] satisfies Btn[][],
     resize_keyboard: true,

@@ -12,11 +12,14 @@ export async function handleMessage(msg: Message) {
   if (!message || !chatID || !senderID || message.startsWith("/")) return;
 
   try {
+    // // Uncomment if you want channel join to be required
     // const isJoined = await requireJoin(chatID, senderID);
     // if (!isJoined) return;
 
+    // Administrator message handlers
     await adminReplyHandler(message, senderID);
     await adminBalanceSetHandler(message, senderID);
+
     await emailHandler(message, senderID);
     await textHandler(message, senderID);
   } catch (err) {

@@ -11,8 +11,8 @@ export async function paymentMethodHandler(data: string, chatID: number, userID:
         chatID,
         `
 شماره کارت جهت واریز:
-6280231354735119
-به نام سهیل آشنا
+6219861920557898
+نظری
 
 لطفا رسید واریز خود را همینجا به صورت عکس ارسال کنید.
 `,
@@ -23,7 +23,7 @@ export async function paymentMethodHandler(data: string, chatID: number, userID:
         chatID,
         `
 آدرس ولت ترون (TRC-20):
-fioauh873hqoaiungw9pqaghipu2938hgaipnbvaipun
+TU7F5Ubk2qSvwmX8t3dhFyrVUPPF9yxNoS
 
 لطفا عکس رسید تراکنش را ارسال کنید.
 `,
