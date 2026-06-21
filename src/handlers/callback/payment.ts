@@ -9,24 +9,30 @@ export async function paymentMethodHandler(data: string, chatID: number, userID:
     case "pay_card":
       await bot.sendMessage(
         chatID,
-        `
-شماره کارت جهت واریز:
-6219861920557898
-نظری
+        `💳 <b>پرداخت کارت‌به‌کارت</b>
 
-لطفا رسید واریز خود را همینجا به صورت عکس ارسال کنید.
-`,
+مبلغ موردنظر را به کارت زیر واریز کنید:
+
+<code>6219861920557898</code>
+به نام <b>نظری</b>
+
+📸 پس از واریز، تصویر واضح رسید را همین‌جا ارسال کنید.`,
+        { parse_mode: "HTML" },
       );
       break;
     case "pay_trx":
       await bot.sendMessage(
         chatID,
-        `
-آدرس ولت ترون (TRC-20):
-TU7F5Ubk2qSvwmX8t3dhFyrVUPPF9yxNoS
+        `🪙 <b>پرداخت با ترون (TRX)</b>
 
-لطفا عکس رسید تراکنش را ارسال کنید.
-`,
+مبلغ را از طریق شبکه <b>BEP-20</b> به آدرس زیر ارسال کنید:
+
+<code>TU7F5Ubk2qSvwmX8t3dhFyrVUPPF9yxNoS</code>
+
+⚠️ لطفاً پیش از انتقال، شبکه و آدرس کیف پول را با دقت بررسی کنید.
+
+📸 پس از پرداخت، تصویر رسید تراکنش را همین‌جا ارسال کنید.`,
+        { parse_mode: "HTML" },
       );
       break;
   }

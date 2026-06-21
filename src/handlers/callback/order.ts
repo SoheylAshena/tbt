@@ -20,33 +20,25 @@ export async function orderHandler(data: string, senderID: number, chatID: numbe
     await updateOrder(orderID, { status: "waiting_email" });
     return await bot.sendMessage(
       chatID,
-      `
-📧 لطفا ایمیل اکانت را ارسال کنید.
+      `📧 <b>ایمیل اکانت را وارد کنید</b>
 
-مثال:
+اکانت روی این ایمیل فعال خواهد شد؛ لطفاً از درست‌بودن آن مطمئن شوید.
 
-example@gmail.com
-`,
-      waitingEmailMenu,
+نمونه: <code>example@gmail.com</code>`,
+      { ...waitingEmailMenu, parse_mode: "HTML" },
     );
   }
 
   await bot.sendMessage(
     chatID,
-    `
-🛒 سفارش جدید
+    `🛒 <b>سفارش شما آماده پرداخت است</b>
 
-📌 شماره سفارش:
-#${orderID}
+🧾 شماره سفارش: <code>#${orderID}</code>
+📦 محصول: <b>${product.text}</b>
+💰 مبلغ: <b>${product.amount.toLocaleString("fa-IR")} تومان</b>
 
-📦 محصول:
-${product.text}
-
-💰 مبلغ:
-${product.amount.toLocaleString("fa-IR")} تومان
-
-❌ در صورت انصراف، روی "لغو سفارش" بزنید.
-`,
-    pendingOrderMenu,
+برای نهایی‌کردن سفارش، «پرداخت از موجودی» را انتخاب کنید.
+در صورت انصراف می‌توانید سفارش را لغو کنید.`,
+    { ...pendingOrderMenu, parse_mode: "HTML" },
   );
 }

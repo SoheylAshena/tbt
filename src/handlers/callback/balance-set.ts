@@ -18,15 +18,18 @@ export async function adminBalanceSetHandler(message: string, adminID: number) {
 
   await bot.sendMessage(
     targetUserID,
-    `موجودی شما افزایش یافت،
-موجودی: ${finalBalance}
-`,
+    `✅ <b>موجودی حساب شما افزایش یافت</b>
+
+💰 موجودی جدید: <b>${finalBalance.toLocaleString("fa-IR")} تومان</b>`,
+    { parse_mode: "HTML" },
   );
 
   await bot.sendMessage(
     adminID,
-    `موجودی ${targetUserID} افزایش یافت،
-موجودی: ${finalBalance}
-`,
+    `✅ <b>افزایش موجودی با موفقیت انجام شد</b>
+
+👤 شناسه کاربر: <code>${targetUserID}</code>
+💰 موجودی جدید: <b>${finalBalance.toLocaleString("fa-IR")} تومان</b>`,
+    { parse_mode: "HTML" },
   );
 }
