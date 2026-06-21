@@ -2,9 +2,7 @@ import { adminIDs, bot, waitingForEmail } from "../config";
 import {
   deleteUserExistingOrder,
   getUserData,
-  getUserPendingOrder,
-  updateOrder,
-  updateUserBalance,
+  purchasePendingOrder,
 } from "./database-helpers";
 import { mainMenu } from "../keyboards";
 
@@ -93,54 +91,46 @@ export async function sendPhotoToAdmins(fileID: string, caption: string, senderI
 }
 
 export async function payFromBalance(userID: number, chatID: number) {
-  const userData = await getUserData(userID);
-  const userName = userData.username;
-  const balance = userData.balance;
-
-  const pendingOrder = await getUserPendingOrder(userID);
-
-  const orderID = pendingOrder.id;
-  const productName = pendingOrder.product_name;
-  const amount = pendingOrder.amount;
-
   try {
-    if (balance < amount) {
+    const result = await purchasePendingOrder(userID);
+
+    if (result.status === "no_user" || result.status === "no_order") {
+      await bot.sendMessage(chatID, "❌ سفارش فعالی پیدا نشد.", mainMenu);
+      return;
+    }
+
+    if (result.status === "out_of_stock") {
       await bot.sendMessage(
         chatID,
-        `
-موجودی ناکافی، لطفا ابتدا موجودی خود را افزایش دهید
-
-موجودی فعلی: ${balance}
-
-هزینه سفارش: ${amount}
-`,
+        "⏳ موجودی این محصول تمام شده است. مبلغی از حساب شما کم نشد.",
         mainMenu,
       );
-    } else {
-      const newBalance = balance - amount;
-      if (newBalance < 0) return;
+      return;
+    }
 
-      await updateUserBalance(userID, newBalance);
-      await updateOrder(orderID, { status: "paid" });
+    if (result.status === "insufficient_balance") {
+      await bot.sendMessage(
+        chatID,
+        `موجودی ناکافی است؛ لطفاً ابتدا موجودی خود را افزایش دهید.\n\nموجودی فعلی: ${result.balance.toLocaleString("fa-IR")} تومان\nهزینه سفارش: ${result.amount.toLocaleString("fa-IR")} تومان`,
+        mainMenu,
+      );
+      return;
+    }
+
+    const safeConfig = result.config.replace(/[&<>]/g, (char: string) => {
+      const entities: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
+      return entities[char];
+    });
+    await bot.sendMessage(
+      chatID,
+      `✅ <b>خرید شما با موفقیت انجام شد</b>\n\n🧾 شماره سفارش: <code>#${result.orderId}</code>\n📦 محصول: <b>${result.productName}</b>\n💰 موجودی باقی‌مانده: <b>${result.newBalance.toLocaleString("fa-IR")} تومان</b>\n\nبرای کپی‌کردن کانفیگ روی کادر زیر ضربه بزنید:\n\n<code>${safeConfig}</code>`,
+      { ...mainMenu, parse_mode: "HTML" },
+    );
+
+    if (result.newlyPurchased) {
       await sendMessageToAdmins(
         userID,
-        `
-یک سفارش ثبت و پرداخت شد:
-
-محصول: ${productName}
-
-سفارش دهنده: ${userName}
-شناسه کاربری مشتری: ${userID}
-`,
-      );
-
-      bot.sendMessage(
-        userID,
-        `
-سفارش شما ثبت شد، پشتیبان به زودی با شما تماس میگیرد.
-ممنون از اعتمادتون
-        `,
-        mainMenu,
+        `سفارش #${result.orderId} به‌صورت خودکار تحویل شد.\n\nمحصول: ${result.productName}\nشناسه کاربر: ${userID}`,
       );
     }
   } catch (err) {

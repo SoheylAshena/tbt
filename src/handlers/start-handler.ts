@@ -1,11 +1,14 @@
 import { type Message } from "node-telegram-bot-api";
 import { bot } from "../config";
 import { mainMenu } from "../keyboards";
+import { createUser } from "../utils/database-helpers";
 
 export async function handleStartCommand(msg: Message) {
   if (!msg.from) return;
 
   try {
+    await createUser(msg.from);
+
     await bot.setMessageReaction(msg.chat.id, msg.message_id, {
       reaction: [{ type: "emoji", emoji: "❤‍🔥" }],
     });

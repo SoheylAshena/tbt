@@ -1,32 +1,27 @@
-import { PRODUCTS } from "../../constants";
-import { createOrder, getUserExistingOrderID, updateOrder } from "../../utils/database-helpers";
-import { bot, waitingForEmail } from "../../config";
-import { pendingOrderMenu, waitingEmailMenu } from "../../keyboards";
+import { createOrder, getProduct, getUserExistingOrderID, updateOrder } from "../../utils/database-helpers";
+import { bot } from "../../config";
+import { pendingOrderMenu } from "../../keyboards";
 
 export async function orderHandler(data: string, senderID: number, chatID: number) {
-  const product = PRODUCTS.find((item) => item.callback_data === data);
+  if (!data.startsWith("product_")) return;
+
+  const productID = Number(data.slice("product_".length));
+  if (!Number.isSafeInteger(productID)) return;
+
+  const product = await getProduct(productID);
   if (!product) return;
 
   let orderID = await getUserExistingOrderID(senderID);
 
   if (orderID) {
-    await updateOrder(orderID, { product_name: product.text, amount: product.amount });
+    await updateOrder(orderID, {
+      product_id: product.id,
+      product_name: product.name,
+      amount: product.price,
+      status: "pending_payment",
+    });
   } else {
-    orderID = await createOrder(senderID, product.text, product.amount);
-  }
-
-  if (data.startsWith("ai_")) {
-    waitingForEmail.set(senderID, orderID);
-    await updateOrder(orderID, { status: "waiting_email" });
-    return await bot.sendMessage(
-      chatID,
-      `📧 <b>ایمیل اکانت را وارد کنید</b>
-
-اکانت روی این ایمیل فعال خواهد شد؛ لطفاً از درست‌بودن آن مطمئن شوید.
-
-نمونه: <code>example@gmail.com</code>`,
-      { ...waitingEmailMenu, parse_mode: "HTML" },
-    );
+    orderID = await createOrder(senderID, product);
   }
 
   await bot.sendMessage(
@@ -34,8 +29,8 @@ export async function orderHandler(data: string, senderID: number, chatID: numbe
     `🛒 <b>سفارش شما آماده پرداخت است</b>
 
 🧾 شماره سفارش: <code>#${orderID}</code>
-📦 محصول: <b>${product.text}</b>
-💰 مبلغ: <b>${product.amount.toLocaleString("fa-IR")} تومان</b>
+📦 محصول: <b>${product.name}</b>
+💰 مبلغ: <b>${product.price.toLocaleString("fa-IR")} تومان</b>
 
 برای نهایی‌کردن سفارش، «پرداخت از موجودی» را انتخاب کنید.
 در صورت انصراف می‌توانید سفارش را لغو کنید.`,

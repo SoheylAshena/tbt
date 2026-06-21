@@ -1,5 +1,4 @@
 import { type KeyboardButton, type SendMessageOptions } from "node-telegram-bot-api";
-import { PRODUCTS } from "../constants";
 
 type ProductButton = {
   text: string;
@@ -12,12 +11,6 @@ export function createInlineKeys(data: ProductButton[]) {
       inline_keyboard: [...data.map((item) => [item])],
     },
   };
-}
-
-export function createProductKeyboard(keyword: string) {
-  const products = PRODUCTS.filter((item) => item.callback_data.startsWith(keyword));
-
-  return createInlineKeys(products);
 }
 
 type Keyboard = KeyboardButton[][];

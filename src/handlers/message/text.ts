@@ -1,8 +1,9 @@
-import { createInlineKeys, createProductKeyboard } from "../../utils/keyboard-helpers";
+import { createInlineKeys } from "../../utils/keyboard-helpers";
 import { bot, testAccount } from "../../config";
 import { mainMenu, productMenu } from "../../keyboards";
 import { cancelOrder, displayUserInfo, payFromBalance } from "../../utils/message-helpers";
 import { PAYMENT_METHODS } from "../../constants";
+import { getAvailableProducts } from "../../utils/database-helpers";
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>]/g, (character) => {
@@ -19,38 +20,26 @@ function escapeHtml(value: string) {
 export async function textHandler(message: string, senderID: number) {
   switch (message) {
     case "V2ray VPN":
-      const inlineKeysVPN = createProductKeyboard("vpn");
+      const products = await getAvailableProducts();
+      if (products.length === 0) {
+        await bot.sendMessage(
+          senderID,
+          "⏳ <b>در حال حاضر کانفیگ آماده‌ای موجود نیست</b>\n\nلطفاً کمی بعد دوباره بررسی کنید.",
+          { parse_mode: "HTML" },
+        );
+        break;
+      }
+
+      const inlineKeysVPN = createInlineKeys(
+        products.map((product) => ({
+          text: `${product.name} | ${product.price.toLocaleString("fa-IR")} تومان`,
+          callback_data: `product_${product.id}`,
+        })),
+      );
       await bot.sendMessage(
         senderID,
         "🌐 <b>انتخاب اشتراک V2Ray</b>\n\nحجم و مدت اشتراک موردنظرتان را انتخاب کنید 👇",
         { ...inlineKeysVPN, parse_mode: "HTML" },
-      );
-      break;
-
-    case "اکانت Windscribe":
-      const inlineKeysWind = createProductKeyboard("wind");
-      await bot.sendMessage(
-        senderID,
-        "🛡 <b>انتخاب اشتراک Windscribe</b>\n\nپلن مناسب خود را از گزینه‌های زیر انتخاب کنید 👇",
-        { ...inlineKeysWind, parse_mode: "HTML" },
-      );
-      break;
-
-    case "اکانت WireGuard":
-      const inlineKeysWire = createProductKeyboard("wire");
-      await bot.sendMessage(
-        senderID,
-        "⚡️ <b>انتخاب اشتراک WireGuard</b>\n\nیکی از پلن‌های زیر را برای ادامه انتخاب کنید 👇",
-        { ...inlineKeysWire, parse_mode: "HTML" },
-      );
-      break;
-
-    case "اکانت هوش مصنوعی":
-      const inlineKeysAI = createProductKeyboard("ai");
-      await bot.sendMessage(
-        senderID,
-        "🤖 <b>اکانت‌های هوش مصنوعی</b>\n\nسرویس موردنظرتان را از فهرست زیر انتخاب کنید 👇",
-        { ...inlineKeysAI, parse_mode: "HTML" },
       );
       break;
 
