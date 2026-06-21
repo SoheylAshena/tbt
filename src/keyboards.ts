@@ -1,51 +1,24 @@
-import type TelegramBot from "node-telegram-bot-api";
+import { createMenu } from "./utils/keyboard-helpers";
 
-type Btn = TelegramBot.KeyboardButton;
+export const mainMenu = createMenu([
+  [
+    { text: "محصولات", style: "primary" },
+    { text: "افزایش موجودی", style: "success" },
+  ],
+  [{ text: "حساب کاربری من" }],
+  [{ text: "پشتیبانی" }],
+]);
 
-export const mainMenu = {
-  reply_markup: {
-    keyboard: [
-      [
-        { text: "محصولات", style: "primary" },
-        { text: "افزایش موجودی", style: "success" },
-      ],
-      [{ text: "حساب کاربری من" }],
-      [{ text: "پشتیبانی" }],
-    ] satisfies Btn[][],
-    resize_keyboard: true,
-  },
-};
+export const productMenu = createMenu([
+  [{ text: "V2ray VPN", style: "primary" }],
+  [{ text: "بازگشت به منو اصلی", style: "success" }],
+]);
 
-export const productMenu = {
-  reply_markup: {
-    keyboard: [
-      [{ text: "V2ray VPN", style: "primary" }],
-      // [
-      //   { text: "اکانت Windscribe", style: "primary" },
-      //   { text: "اکانت WireGuard", style: "primary" },
-      // ],
-      // [{ text: "اکانت هوش مصنوعی", style: "primary" }],
-      [{ text: "بازگشت به منو اصلی", style: "success" }],
-    ] satisfies Btn[][],
-    resize_keyboard: true,
-  },
-};
+export const pendingOrderMenu = createMenu([
+  [
+    { text: "پرداخت از موجودی", style: "success" },
+    { text: "لغو سفارش", style: "danger" },
+  ],
+]);
 
-export const pendingOrderMenu = {
-  reply_markup: {
-    keyboard: [
-      [
-        { text: "پرداخت از موجودی", style: "success" },
-        { text: "لغو سفارش", style: "danger" },
-      ],
-    ] satisfies Btn[][],
-    resize_keyboard: true,
-  },
-};
-
-export const waitingEmailMenu = {
-  reply_markup: {
-    keyboard: [[{ text: "لغو سفارش", style: "danger" }]] satisfies Btn[][],
-    resize_keyboard: true,
-  },
-};
+export const waitingEmailMenu = createMenu([[{ text: "لغو سفارش", style: "danger" }]]);
