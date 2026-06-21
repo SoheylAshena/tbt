@@ -2,17 +2,17 @@ import { type Message } from "node-telegram-bot-api";
 import { bot } from "../config";
 import { mainMenu } from "../keyboards";
 
-function escapeHtml(value: string) {
-  return value.replace(/[&<>]/g, (character) => {
-    const entities: Record<string, string> = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-    };
+// function escapeHtml(value: string) {
+//   return value.replace(/[&<>]/g, (character) => {
+//     const entities: Record<string, string> = {
+//       "&": "&amp;",
+//       "<": "&lt;",
+//       ">": "&gt;",
+//     };
 
-    return entities[character];
-  });
-}
+//     return entities[character];
+//   });
+// }
 
 export async function handleStartCommand(msg: Message) {
   if (!msg.from) return;
@@ -22,7 +22,7 @@ export async function handleStartCommand(msg: Message) {
       reaction: [{ type: "emoji", emoji: "❤‍🔥" }],
     });
 
-    const firstName = escapeHtml(msg.from.first_name);
+    const firstName = msg.from.first_name;
     const welcomeMessage = `سلام <b>${firstName}</b> عزیز 👋
 
 به <b>TelFactory</b> خوش اومدی! ✨
