@@ -20,16 +20,28 @@ export async function displayUserInfo(senderID: number, chatID: number) {
   const userData = await getUserData(senderID);
 
   if (!userData) {
-    await bot.sendMessage(chatID, "❌ اطلاعات کاربری پیدا نشد.");
+    await bot.sendMessage(
+      chatID,
+      "❌ <b>حساب کاربری پیدا نشد</b>\n\nلطفاً دوباره ربات را با دستور /start راه‌اندازی کنید.",
+      { parse_mode: "HTML" },
+    );
     return;
   }
 
-  const infoMessage = `
-اطلاعات حساب کاربری شما:
-شناسه کاربری: ${userData.telegram_id}
-موجودی حساب: ${Number(userData.balance).toLocaleString("fa-IR")} تومان
-        `;
-  await bot.sendMessage(chatID, infoMessage);
+  const formattedBalance = Number(userData.balance).toLocaleString("fa-IR");
+  const infoMessage = `👤 <b>حساب کاربری شما</b>
+
+━━━━━━━━━━━━━━
+🆔 <b>شناسه کاربری</b>
+<code>${userData.telegram_id}</code>
+
+💰 <b>موجودی حساب</b>
+<b>${formattedBalance} تومان</b>
+━━━━━━━━━━━━━━
+
+✨ از همراهی شما با TelFactory خوشحالیم.`;
+
+  await bot.sendMessage(chatID, infoMessage, { parse_mode: "HTML" });
 }
 
 export async function cancelOrder(senderID: number, chatID: number) {
