@@ -5,6 +5,7 @@ dotenv.config();
 
 const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN!;
 export const adminIDs = process.env.ADMIN_ID!.split(",").map((id) => Number(id.trim())) || [];
+export const testAccount = process.env.TEST_ACCOUNT?.trim();
 
 export const bot = new TelegramBot(telegramBotToken, {
   polling: true,

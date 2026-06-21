@@ -6,6 +6,7 @@ export const mainMenu = createMenu([
     { text: "افزایش موجودی", style: "success" },
   ],
   [{ text: "حساب کاربری من" }],
+  [{ text: "دریافت اکانت تست", style: "primary" }],
   [{ text: "پشتیبانی" }],
 ]);
 

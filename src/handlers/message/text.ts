@@ -1,5 +1,5 @@
 import { createInlineKeys, createProductKeyboard } from "../../utils/keyboard-helpers";
-import { bot } from "../../config";
+import { bot, testAccount } from "../../config";
 import { mainMenu, productMenu } from "../../keyboards";
 import { cancelOrder, displayUserInfo, payFromBalance } from "../../utils/message-helpers";
 import { PAYMENT_METHODS } from "../../constants";
@@ -40,6 +40,15 @@ export async function textHandler(message: string, senderID: number) {
 
     case "حساب کاربری من":
       await displayUserInfo(senderID, senderID);
+      break;
+
+    case "دریافت اکانت تست":
+      if (!testAccount) {
+        await bot.sendMessage(senderID, "در حال حاضر اکانت تست در دسترس نیست.");
+        break;
+      }
+
+      await bot.sendMessage(senderID, `اکانت تست شما:\n\n${testAccount}`);
       break;
 
     case "افزایش موجودی":

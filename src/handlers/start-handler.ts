@@ -2,18 +2,6 @@ import { type Message } from "node-telegram-bot-api";
 import { bot } from "../config";
 import { mainMenu } from "../keyboards";
 
-// function escapeHtml(value: string) {
-//   return value.replace(/[&<>]/g, (character) => {
-//     const entities: Record<string, string> = {
-//       "&": "&amp;",
-//       "<": "&lt;",
-//       ">": "&gt;",
-//     };
-
-//     return entities[character];
-//   });
-// }
-
 export async function handleStartCommand(msg: Message) {
   if (!msg.from) return;
 
