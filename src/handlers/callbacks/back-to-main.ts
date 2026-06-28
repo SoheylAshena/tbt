@@ -1,5 +1,5 @@
-import { mainMenu } from "../../keyboards";
-import { bot } from "../../config";
+import { bot } from "../../infrastructure/telegram";
+import { mainMenu } from "../../ui/menus";
 
 export async function backToMainMenuHandler(data: string, chatID: number) {
   if (data === "back_to_main") {

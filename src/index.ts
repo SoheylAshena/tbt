@@ -1,9 +1,9 @@
-import { bot } from "./config";
-import { handleCallbackQuery } from "./handlers/callback-handlers";
-import { handleMessage } from "./handlers/message-handlers";
-import { handlePhoto } from "./handlers/photo-handler";
-import { handleStartCommand } from "./handlers/start-handler";
-import { handleAddConfigCommand, handleStockCommand } from "./handlers/admin-config-handler";
+import { handleAddConfigCommand, handleStockCommand } from "./handlers/commands/admin-config";
+import { handleStartCommand } from "./handlers/commands/start";
+import { handleCallbackQuery } from "./handlers/callbacks";
+import { handleMessage } from "./handlers/messages";
+import { handlePhoto } from "./handlers/messages/photo";
+import { bot } from "./infrastructure/telegram";
 
 bot.onText(/\/start/, handleStartCommand);
 bot.onText(/^\/addconfig(?:@\w+)?(?:\s+([\s\S]+))?$/, handleAddConfigCommand);

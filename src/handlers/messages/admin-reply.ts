@@ -1,4 +1,5 @@
-import { adminReplyMode, bot } from "../../config";
+import { bot } from "../../infrastructure/telegram";
+import { adminReplyMode } from "../../shared/state";
 
 export async function adminReplyHandler(message: string, senderID: number) {
   const targetUserId = adminReplyMode.get(senderID);

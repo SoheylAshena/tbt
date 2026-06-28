@@ -1,8 +1,8 @@
 import { type Message } from "node-telegram-bot-api";
-import { adminReplyHandler } from "./message/admin-reply";
-import { emailHandler } from "./message/email";
-import { textHandler } from "./message/text";
-import { adminBalanceSetHandler } from "./callback/balance-set";
+import { adminBalanceSetHandler } from "../callbacks/balance-set";
+import { adminReplyHandler } from "./admin-reply";
+import { emailHandler } from "./email";
+import { textHandler } from "./text";
 
 export async function handleMessage(msg: Message) {
   const message = msg.text;

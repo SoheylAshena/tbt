@@ -1,10 +1,9 @@
-import { bot } from "../config";
-
-const CHANNEL_ID = process.env.CHANNEL_ID!;
+import { channelID } from "../config";
+import { bot } from "../infrastructure/telegram";
 
 export async function isUserJoined(userId: number) {
   try {
-    const member = await bot.getChatMember(CHANNEL_ID, userId);
+    const member = await bot.getChatMember(channelID, userId);
 
     return ["member", "administrator", "creator"].includes(member.status);
   } catch {

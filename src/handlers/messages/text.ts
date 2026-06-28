@@ -1,21 +1,12 @@
-import { createInlineKeys } from "../../utils/keyboard-helpers";
-import { bot, testAccount } from "../../config";
-import { mainMenu, productMenu } from "../../keyboards";
-import { cancelOrder, displayUserInfo, payFromBalance } from "../../utils/message-helpers";
+import { testAccount } from "../../config";
 import { PAYMENT_METHODS } from "../../constants";
-import { getAvailableProducts } from "../../utils/database-helpers";
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>]/g, (character) => {
-    const entities: Record<string, string> = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-    };
-
-    return entities[character];
-  });
-}
+import { bot } from "../../infrastructure/telegram";
+import { getAvailableProducts } from "../../repositories/products";
+import { payFromBalance } from "../../services/purchase-messages";
+import { cancelOrder, displayUserInfo } from "../../services/user-actions";
+import { escapeHtml } from "../../shared/html";
+import { createInlineKeys } from "../../ui/keyboard-builders";
+import { mainMenu, productMenu } from "../../ui/menus";
 
 export async function textHandler(message: string, senderID: number) {
   switch (message) {

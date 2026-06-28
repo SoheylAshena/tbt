@@ -1,6 +1,7 @@
-import { bot, waitingForEmail } from "../../config";
-import { mainMenu, pendingOrderMenu } from "../../keyboards";
-import { getOrderData, updateOrder } from "../../utils/database-helpers";
+import { bot } from "../../infrastructure/telegram";
+import { getOrderData, updateOrder } from "../../repositories/orders";
+import { waitingForEmail } from "../../shared/state";
+import { mainMenu, pendingOrderMenu } from "../../ui/menus";
 
 export async function emailHandler(message: string, senderID: number) {
   const waitingOrderId = waitingForEmail.get(senderID);

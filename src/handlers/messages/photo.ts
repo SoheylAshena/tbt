@@ -1,7 +1,9 @@
 import { type Message } from "node-telegram-bot-api";
-import { bot, waitingForRecipt } from "../config";
-import { mainMenu } from "../keyboards";
-import { sendError, sendPhotoToAdmins } from "../utils/message-helpers";
+import { bot } from "../../infrastructure/telegram";
+import { sendPhotoToAdmins } from "../../services/admin-notifications";
+import { sendError } from "../../services/user-actions";
+import { waitingForReceipt } from "../../shared/state";
+import { mainMenu } from "../../ui/menus";
 
 export async function handlePhoto(msg: Message) {
   const senderID = msg.from?.id;
@@ -10,12 +12,12 @@ export async function handlePhoto(msg: Message) {
 
   if (!senderID || !chatID || !msg.photo?.length) return;
 
-  if (!waitingForRecipt.get(senderID)) {
+  if (!waitingForReceipt.get(senderID)) {
     bot.sendMessage(chatID, "عکس نامعتبر❗");
     return;
   }
 
-  waitingForRecipt.delete(senderID);
+  waitingForReceipt.delete(senderID);
 
   try {
     const fileId = msg.photo[msg.photo.length - 1].file_id;

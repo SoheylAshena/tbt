@@ -1,7 +1,7 @@
 import { type Message } from "node-telegram-bot-api";
-import { bot } from "../config";
-import { mainMenu } from "../keyboards";
-import { createUser } from "../utils/database-helpers";
+import { bot } from "../../infrastructure/telegram";
+import { createUser } from "../../repositories/users";
+import { mainMenu } from "../../ui/menus";
 
 export async function handleStartCommand(msg: Message) {
   if (!msg.from) return;

@@ -1,7 +1,7 @@
 import { type CallbackQuery } from "node-telegram-bot-api";
-import { isUserJoined } from "../../utils/bot-helpers";
-import { bot } from "../../config";
-import { mainMenu } from "../../keyboards";
+import { bot } from "../../infrastructure/telegram";
+import { isUserJoined } from "../../services/channel-membership";
+import { mainMenu } from "../../ui/menus";
 
 export async function joinCheckHandler(callbackQuery: CallbackQuery) {
   const data = callbackQuery.data;

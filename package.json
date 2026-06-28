@@ -13,11 +13,11 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "dist/bot.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch src/bot.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "rimraf dist && tsup",
-    "start": "pm2 start dist/bot.js --name tbt",
+    "start": "pm2 start dist/index.js --name tbt",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

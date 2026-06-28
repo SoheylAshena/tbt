@@ -1,4 +1,4 @@
-import { createMenu } from "./utils/keyboard-helpers";
+import { createMenu } from "./keyboard-builders";
 
 export const mainMenu = createMenu([
   [

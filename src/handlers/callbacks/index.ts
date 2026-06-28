@@ -1,9 +1,9 @@
 import { CallbackQuery } from "node-telegram-bot-api";
-import { bot } from "../config";
-import { backToMainMenuHandler } from "./callback/back-to-main";
-import { adminReplyHandler } from "./callback/admin-reply";
-import { orderHandler } from "./callback/order";
-import { paymentMethodHandler } from "./callback/payment";
+import { bot } from "../../infrastructure/telegram";
+import { adminReplyHandler } from "./admin-reply";
+import { backToMainMenuHandler } from "./back-to-main";
+import { orderHandler } from "./order";
+import { paymentMethodHandler } from "./payment";
 
 export async function handleCallbackQuery(callbackQuery: CallbackQuery) {
   const data = callbackQuery.data;

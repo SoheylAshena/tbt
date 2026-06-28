@@ -1,9 +1,10 @@
-import { bot, waitingForRecipt } from "../../config";
+import { bot } from "../../infrastructure/telegram";
+import { waitingForReceipt } from "../../shared/state";
 
 export async function paymentMethodHandler(data: string, chatID: number, userID: number) {
   if (!data.startsWith("pay")) return;
 
-  waitingForRecipt.set(userID, true);
+  waitingForReceipt.set(userID, true);
 
   switch (data) {
     case "pay_card":

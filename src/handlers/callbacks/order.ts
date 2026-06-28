@@ -1,6 +1,7 @@
-import { createOrder, getProduct, getUserExistingOrderID, updateOrder } from "../../utils/database-helpers";
-import { bot } from "../../config";
-import { pendingOrderMenu } from "../../keyboards";
+import { bot } from "../../infrastructure/telegram";
+import { createOrder, getUserExistingOrderID, updateOrder } from "../../repositories/orders";
+import { getProduct } from "../../repositories/products";
+import { pendingOrderMenu } from "../../ui/menus";
 
 export async function orderHandler(data: string, senderID: number, chatID: number) {
   if (!data.startsWith("product_")) return;

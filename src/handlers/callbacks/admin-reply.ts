@@ -1,4 +1,6 @@
-import { adminIDs, adminReplyMode, bot, waitingForBalance } from "../../config";
+import { adminIDs } from "../../config";
+import { bot } from "../../infrastructure/telegram";
+import { adminReplyMode, waitingForBalance } from "../../shared/state";
 
 export async function adminReplyHandler(data: string, senderID: number) {
   if (!data.startsWith("reply_") && !data.startsWith("block_") && !data.startsWith("approve_")) return;

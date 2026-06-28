@@ -1,5 +1,6 @@
-import { bot, waitingForBalance } from "../../config";
-import { getUserData, updateUserBalance } from "../../utils/database-helpers";
+import { bot } from "../../infrastructure/telegram";
+import { getUserData, updateUserBalance } from "../../repositories/users";
+import { waitingForBalance } from "../../shared/state";
 
 export async function adminBalanceSetHandler(message: string, adminID: number) {
   const targetUserID = waitingForBalance.get(adminID);

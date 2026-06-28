@@ -1,6 +1,7 @@
 import { type Message } from "node-telegram-bot-api";
-import { adminIDs, bot } from "../config";
-import { addProductConfig, getProductStock } from "../utils/database-helpers";
+import { adminIDs } from "../../config";
+import { bot } from "../../infrastructure/telegram";
+import { addProductConfig, getProductStock } from "../../repositories/products";
 
 const PRODUCT_CODES = new Set(["10gb", "unlimited"]);
 
